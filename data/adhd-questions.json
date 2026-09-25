@@ -1,0 +1,956 @@
+{
+  "schema_version": "1.0.0",
+  "title": "ADHD symptom discussion questions",
+  "audience": "Adults answering for themselves",
+  "language": "en",
+  "purpose": "Educational, unvalidated self-report prompts for discussing possible ADHD symptoms with a qualified healthcare professional. Not a diagnostic instrument.",
+  "instructions": "For questions 1–18, think about your typical experience during the past six months. Choose one answer per question. Question 20 allows multiple choices except its exclusive options.",
+  "limitations": "These original questions have not been clinically validated. A score or pattern cannot determine whether someone has ADHD. Diagnosis requires a professional assessment of duration, developmental appropriateness, childhood onset, symptoms across settings, impairment, and other possible causes.",
+  "response_format": {
+    "single_select": "Store one option value.",
+    "multi_select": "Store an array of option values; reject a selection that combines an exclusive option with any other option."
+  },
+  "result_guidance": {
+    "symptom_item_scores": "For q01–q18, store the selected score (0–4) and review flag. Scores only summarize reported frequency; do not convert them to a probability, diagnosis, or DSM symptom count.",
+    "domains": [
+      "inattention",
+      "hyperactivity_impulsivity"
+    ],
+    "context_items": [
+      "q19",
+      "q20"
+    ],
+    "display_message": "Your responses can help you describe your experiences to a healthcare professional. They do not diagnose or rule out ADHD. If these difficulties affect your life, consider seeking an assessment.",
+    "no_diagnostic_cutoff": true
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "domain": "inattention",
+      "facet": "detail_errors",
+      "statement": "How often do you miss small details or make avoidable mistakes in everyday tasks?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q02",
+      "domain": "inattention",
+      "facet": "sustained_attention",
+      "statement": "How often is it hard to stay focused through a task, conversation, or activity?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q03",
+      "domain": "inattention",
+      "facet": "listening",
+      "statement": "How often do you realize you missed what someone said while they were speaking directly to you?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q04",
+      "domain": "inattention",
+      "facet": "follow_through",
+      "statement": "How often do you start a task but lose track before finishing it, even when you understand what to do?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q05",
+      "domain": "inattention",
+      "facet": "organization",
+      "statement": "How often is it difficult to put tasks in order and manage the steps needed to complete them?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q06",
+      "domain": "inattention",
+      "facet": "sustained_effort",
+      "statement": "How often do you put off tasks that require sustained concentration?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q07",
+      "domain": "inattention",
+      "facet": "losing_items",
+      "statement": "How often do you misplace things you need for daily tasks, such as keys, documents, or your phone?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q08",
+      "domain": "inattention",
+      "facet": "distractibility",
+      "statement": "How often do surrounding activity or unrelated thoughts pull your attention away from what you are doing?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q09",
+      "domain": "inattention",
+      "facet": "forgetfulness",
+      "statement": "How often do you forget routine responsibilities, appointments, or planned errands?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q10",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "fidgeting",
+      "statement": "How often do you fidget, tap, or shift around when you are expected to stay seated?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q11",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "leaving_seat",
+      "statement": "How often do you get up when the situation calls for remaining seated?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q12",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "restlessness",
+      "statement": "How often do you feel so restless that staying still is uncomfortable?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q13",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "quiet_leisure",
+      "statement": "How often is it difficult to take part in quiet leisure activities without moving or making noise?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q14",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "on_the_go",
+      "statement": "How often do you feel driven to keep moving or doing something, even when you could pause?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q15",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "excessive_talking",
+      "statement": "How often do you talk more than you intend to in conversations or group situations?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q16",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "blurting",
+      "statement": "How often do you say an answer or finish another person's thought before they have finished speaking?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q17",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "waiting_turn",
+      "statement": "How often is it difficult to wait your turn in lines, conversations, or shared activities?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q18",
+      "domain": "hyperactivity_impulsivity",
+      "facet": "interrupting",
+      "statement": "How often do you interrupt others or join their activities before being invited?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "never",
+            "label": "Never",
+            "score": 0
+          },
+          {
+            "value": "rarely",
+            "label": "Rarely",
+            "score": 1
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes",
+            "score": 2
+          },
+          {
+            "value": "often",
+            "label": "Often",
+            "score": 3
+          },
+          {
+            "value": "very_often",
+            "label": "Very often",
+            "score": 4
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "frequency",
+        "score_from": "selected_option.score",
+        "review_flag_values": [
+          "often",
+          "very_often"
+        ],
+        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+      }
+    },
+    {
+      "id": "q19",
+      "domain": "context",
+      "facet": "childhood_history",
+      "statement": "Thinking back to before age 12, do you recall similar attention, restlessness, or impulsivity difficulties?",
+      "answer": {
+        "type": "single_select",
+        "required": true,
+        "options": [
+          {
+            "value": "yes",
+            "label": "Yes"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          },
+          {
+            "value": "unsure",
+            "label": "Not sure"
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "history",
+        "interpretation_by_value": {
+          "yes": "Childhood difficulties reported; discuss examples with a clinician.",
+          "no": "Childhood difficulties not recalled; this alone cannot rule ADHD in or out.",
+          "unsure": "Childhood history uncertain; a clinician may seek other sources of history."
+        }
+      }
+    },
+    {
+      "id": "q20",
+      "domain": "context",
+      "facet": "functional_impact",
+      "statement": "During the past six months, where have these difficulties caused noticeable problems for you? Select all that apply.",
+      "answer": {
+        "type": "multi_select",
+        "required": true,
+        "min_selections": 1,
+        "options": [
+          {
+            "value": "home",
+            "label": "Home or daily responsibilities"
+          },
+          {
+            "value": "work",
+            "label": "Work"
+          },
+          {
+            "value": "education",
+            "label": "School or study"
+          },
+          {
+            "value": "relationships",
+            "label": "Relationships or social life"
+          },
+          {
+            "value": "other",
+            "label": "Another area of life"
+          },
+          {
+            "value": "none",
+            "label": "No noticeable problems",
+            "exclusive": true
+          },
+          {
+            "value": "unsure",
+            "label": "Not sure",
+            "exclusive": true
+          }
+        ]
+      },
+      "rubric": {
+        "kind": "impact_settings",
+        "impact_values": [
+          "home",
+          "work",
+          "education",
+          "relationships",
+          "other"
+        ],
+        "exclusive_values": [
+          "none",
+          "unsure"
+        ],
+        "interpretation": "Record the selected areas and count distinct areas for discussion. Two selected areas suggest impact across more than one setting, but do not establish that symptoms occur in multiple settings or meet diagnostic criteria."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "name": "CDC: Clinical Care of ADHD in Children (diagnostic criteria summary)",
+      "url": "https://www.cdc.gov/adhd/hcp/clinical-care/index.html"
+    },
+    {
+      "name": "NIMH: Attention-Deficit/Hyperactivity Disorder: What You Need to Know",
+      "url": "https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know"
+    }
+  ]
+}
