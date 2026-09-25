@@ -1,50 +1,47 @@
-# Scoring the ADHD discussion questions
+# ADHD symptom indication score
 
-This document describes an **illustrative symptom index**, not a percentage chance of ADHD. The 20 questions in [adhd-questions.json](./adhd-questions.json) were written for this project and have not been clinically validated. No choice of hand-picked weights can turn their answers into a calibrated probability or a diagnosis.
+[adhd-questions.json](./adhd-questions.json) contains the 20 questions, answer options, and machine-readable scoring rules. This page explains the same rules for implementers. The result is a **0–100 indication score**, not a percentage chance or a diagnosis. Higher scores mean more frequently reported symptoms and/or impact. The questions and weights are not clinically validated.
 
-## Inputs and validation
+## Inputs
 
-Use the question IDs and option `value` fields from the JSON file. Questions q01–q18 each require exactly one of `never`, `rarely`, `sometimes`, `often`, or `very_often`. Their `score` values are 0, 1, 2, 3, and 4 respectively. q19 requires one of `yes`, `no`, or `unsure`. q20 requires a nonempty array of unique option values; `none` and `unsure` must each be selected alone. Reject unknown IDs, unknown values, duplicate values, and incompatible q20 selections.
+- q01–q18: one answer per question. Use the selected option's `score`: Never = 0, Rarely = 1, Sometimes = 2, Often = 3, Very often = 4.
+- q19: one of Yes, No, or Not sure. Record this childhood-history answer alongside the score; it has **0% weight**.
+- q20: an array of unique selections. Count `home`, `work`, `education`, `relationships`, and `other` as impact areas. `none` and `unsure` must each be selected alone.
 
-Calculate the index only when all 20 responses are valid and q20 is not `unsure`. If q20 is `unsure`, show the two symptom-domain scores and report that the overall index is unavailable. Do not treat skipped or uncertain answers as zero.
+Reject missing, duplicate, incompatible, or unknown answers. Require all 20 answers. If q20 is `unsure`, show the two symptom component scores but mark the overall score **unavailable**; do not treat uncertainty as zero.
 
-## Weights and calculation
+## Calculation
 
-| Component | Questions | Calculation | Weight |
+| Component | Questions | Normalized score (0–100) | Weight |
 | --- | --- | --- | ---: |
-| Inattention, `I` | q01–q09 | `100 × sum(scores) / 36` | 40% |
-| Hyperactivity/impulsivity, `H` | q10–q18 | `100 × sum(scores) / 36` | 40% |
-| Reported impact, `C` | q20 | `100 × min(number of selected impact areas, 2) / 2` | 20% |
-| Childhood history | q19 | Record the selected value; do not assign points | 0% |
+| Inattention, `I` | q01–q09 | `100 × sum(option.score) / 36` | 40% |
+| Hyperactivity/impulsivity, `H` | q10–q18 | `100 × sum(option.score) / 36` | 40% |
+| Everyday impact, `C` | q20 | `100 × min(impact area count, 2) / 2` | 20% |
+| Childhood history | q19 | Shown separately; no points | 0% |
 
-For `C`, count only `home`, `work`, `education`, `relationships`, and `other`. `none` gives `C = 0`. One selected area gives `C = 50`, and two or more give `C = 100`. These areas describe **reported impact**, not proof that symptoms occurred in multiple settings. `other` is one area even if it describes several experiences.
+For impact, `none` gives `C = 0`; one area gives `C = 50`; two or more areas give `C = 100`. `other` counts as one area. This count reflects where a person reports problems; it does not independently establish that symptoms occur across settings.
 
 ```text
-index = 0.40 × I + 0.40 × H + 0.20 × C
+score = 0.40 × I + 0.40 × H + 0.20 × C
 ```
 
-Keep full precision during calculation and round the final index to the nearest integer for display. The result ranges from 0 to 100. These weights give equal emphasis to the two sets of nine symptom questions and some emphasis to reported impact. They are design choices, **not empirically estimated coefficients**. q19 stays visible alongside the index because a person's recollection of childhood is relevant to an assessment but an uncertain or negative recollection should not mechanically determine a numeric result.
+Keep full precision through the calculation. Round only the final score to the nearest integer, with 0.5 rounded up. Display it as **"ADHD symptom indication score: N/100"**. Also display `I`, `H`, the selected q20 areas, and the q19 response. Do not display `N%` as a chance of having ADHD or assign diagnostic labels to score ranges.
 
-### Example
+### Worked example
 
-If q01–q09 sum to 18, q10–q18 sum to 9, and q20 selects two impact areas:
+Suppose q01–q09 sum to 18, q10–q18 sum to 9, q20 selects `home` and `work`, and q19 is `unsure`:
 
 ```text
 I = 100 × 18 / 36 = 50
 H = 100 × 9 / 36 = 25
-C = 100
-index = 0.40 × 50 + 0.40 × 25 + 0.20 × 100 = 50
+C = 100 × min(2, 2) / 2 = 100
+score = 0.40 × 50 + 0.40 × 25 + 0.20 × 100 = 50/100
 ```
 
-Display **"Symptom discussion index: 50/100"**, never **"50% chance of ADHD."** Also display the two domain scores, selected impact areas, and q19 response so the user can see what contributed to the result. Do not add low/medium/high risk bands or use this index to recommend against seeking care. If someone is concerned or these difficulties affect their life, invite them to discuss the responses with a qualified healthcare professional regardless of the index.
+The q19 response is displayed separately and does not change the 50/100 result.
 
-## Why this is not a probability
+## Interpretation
 
-A probability such as `P(ADHD diagnosis | answers) = 0.50` requires outcome data from people assessed with an appropriate clinical reference standard. The current questions, option thresholds, impact weight, and population have not been validated. Even a high index could reflect other causes of similar difficulties, and a low index does not rule out ADHD. Clinical assessment considers persistence, childhood onset, symptoms across settings, functional impairment, and alternative explanations.
+This score is a simple weighted summary of self-reported experiences, with equal weight for the two nine-question symptom groups and 20% for impact. The weights are design choices, not measured probabilities. A low score does not rule out ADHD; a high score does not establish it. If the person is concerned or their difficulties affect daily life, suggest discussing the answers with a healthcare professional, regardless of score. Clinical evaluation considers duration, childhood history, settings, impairment, and other possible causes.
 
-To provide a defensible probability in a later version, first define the intended population and outcome; collect consented questionnaire responses paired with independent clinician assessments; fit and calibrate a model on development data; measure calibration and discrimination on held-out and external samples; examine performance across relevant groups; and publish uncertainty, limitations, and a plan to monitor drift. Do not label the index as a probability until those steps demonstrate acceptable calibration for the intended population.
-
-## Sources
-
-- [CDC: ADHD diagnostic criteria and evaluation](https://www.cdc.gov/adhd/hcp/clinical-care/index.html)
-- [NIMH: ADHD symptoms and diagnosis](https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know)
+Sources: [CDC diagnostic criteria and evaluation](https://www.cdc.gov/adhd/hcp/clinical-care/index.html); [NIMH ADHD symptoms and diagnosis](https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know).
