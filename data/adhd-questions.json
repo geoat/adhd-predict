@@ -1,23 +1,18 @@
 {
-  "schema_version": "1.1.0",
-  "title": "ADHD symptom indication questions",
-  "audience": "Adults answering for themselves",
+  "schema_version": "2.0.0",
+  "title": "Adult ADHD symptom and context questions",
+  "audience": "Adults answering for themselves (18+)",
   "language": "en",
-  "purpose": "Collect self-reported symptoms and everyday impact for an ADHD indication score.",
-  "instructions": "For q01–q18, consider your typical experience over the past six months. Choose one answer for each question. q19 asks about childhood. For q20, select every area affected, or select No noticeable problems or Not sure alone.",
+  "purpose": "Organize symptom and context responses for discussion during a clinical assessment.",
+  "instructions": "For q01–q18, consider the past six months and choose how often each difficulty occurs. Answer q19 about childhood and each row of q20 about the broader context.",
   "response_format": {
     "single_select": "Store one option value.",
-    "multi_select": "Store an array of unique option values. An option marked exclusive must be selected alone."
+    "matrix_single_select": "Store one option value per row ID, for example q20: {duration:'yes', settings:'yes', impairment:'yes', possible_other_explanations:'unsure'}."
   },
-  "scoring": {
-    "name": "ADHD symptom indication score",
-    "unit": "points_out_of_100",
-    "weights": {
-      "inattention": 0.4,
-      "hyperactivity_impulsivity": 0.4,
-      "impact": 0.2
-    },
-    "components": {
+  "assessment": {
+    "method": "adult_symptom_count_and_context_review",
+    "audience": "Adult self-report; age 18 or older.",
+    "symptom_domains": {
       "inattention": {
         "question_ids": [
           "q01",
@@ -30,9 +25,13 @@
           "q08",
           "q09"
         ],
-        "raw_score": "sum(selected_option.score)",
-        "max_raw_score": 36,
-        "normalized_score": "100 * raw_score / 36"
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "points_per_present_item": 1,
+        "threshold": 5,
+        "max_count": 9
       },
       "hyperactivity_impulsivity": {
         "question_ids": [
@@ -46,33 +45,81 @@
           "q17",
           "q18"
         ],
-        "raw_score": "sum(selected_option.score)",
-        "max_raw_score": 36,
-        "normalized_score": "100 * raw_score / 36"
-      },
-      "impact": {
-        "question_id": "q20",
-        "count_values": [
-          "home",
-          "work",
-          "education",
-          "relationships",
-          "other"
+        "present_values": [
+          "often",
+          "very_often"
         ],
-        "count_cap": 2,
-        "normalized_score": "100 * min(count_selected_impact_values, 2) / 2",
-        "none_score": 0,
-        "unsure_score": null
+        "points_per_present_item": 1,
+        "threshold": 5,
+        "max_count": 9
       }
     },
-    "context_only": {
-      "question_id": "q19",
-      "contributes_to_score": false
+    "presentation_pattern_rules": [
+      {
+        "code": "combined_pattern",
+        "inattention_min": 5,
+        "hyperactivity_impulsivity_min": 5
+      },
+      {
+        "code": "inattentive_pattern",
+        "inattention_min": 5,
+        "hyperactivity_impulsivity_max": 4
+      },
+      {
+        "code": "hyperactive_impulsive_pattern",
+        "inattention_max": 4,
+        "hyperactivity_impulsivity_min": 5
+      },
+      {
+        "code": "below_count_threshold",
+        "inattention_max": 4,
+        "hyperactivity_impulsivity_max": 4
+      }
+    ],
+    "context_checks": {
+      "childhood_onset": "q19 == yes",
+      "duration": "q20.duration == yes",
+      "settings": "q20.settings == yes",
+      "impairment": "q20.impairment == yes",
+      "possible_other_explanations": "q20.possible_other_explanations"
     },
-    "formula": "0.40 * inattention + 0.40 * hyperactivity_impulsivity + 0.20 * impact",
-    "rounding": "Round only the final score to the nearest integer (0.5 rounds up).",
-    "completeness": "Require valid answers to all 20 questions. If q20 is unsure, the overall score is unavailable; show the inattention and hyperactivity_impulsivity component scores.",
-    "interpretation": "Higher scores mean more frequently reported symptoms and/or impact. This is an unvalidated indication score, not a percentage chance or diagnosis."
+    "combination_rules": [
+      {
+        "code": "reported_pattern_with_context",
+        "presentation_pattern_not": "below_count_threshold",
+        "all_required_context_reported": true
+      },
+      {
+        "code": "symptom_pattern_context_incomplete",
+        "presentation_pattern_not": "below_count_threshold",
+        "all_required_context_reported": false
+      },
+      {
+        "code": "below_count_threshold",
+        "presentation_pattern": "below_count_threshold"
+      }
+    ],
+    "other_explanations_rule": "Always flag q20.possible_other_explanations == yes for clinical review. A 'no' or 'unsure' answer does not rule out another explanation.",
+    "output_fields": [
+      "inattention_count",
+      "hyperactivity_impulsivity_count",
+      "presentation_pattern",
+      "childhood_onset_response",
+      "duration_response",
+      "settings_response",
+      "impairment_response",
+      "possible_other_explanations_response",
+      "combination_code"
+    ],
+    "no_weighted_percentage": true,
+    "interpretation": "Criteria-informed self-report summary, not a diagnosis. A clinician must assess developmental appropriateness, corroborating history, severity and impairment, other causes, and all diagnostic criteria.",
+    "required_context_for_reported_pattern": {
+      "q19": "yes",
+      "q20.duration": "yes",
+      "q20.settings": "yes",
+      "q20.impairment": "yes"
+    },
+    "symptom_count_note": "Counting 'often' or 'very_often' is a questionnaire rule, not a validated mapping to a clinically established symptom."
   },
   "questions": [
     {
@@ -112,9 +159,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -154,9 +206,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -196,9 +253,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -238,9 +300,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -280,9 +347,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -322,9 +394,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -364,9 +441,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -406,9 +488,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -448,9 +535,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "inattention",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "inattention",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -490,9 +582,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -532,9 +629,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -574,9 +676,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -616,9 +723,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -658,9 +770,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -700,9 +817,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -742,9 +864,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -784,9 +911,14 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
@@ -826,16 +958,21 @@
         ]
       },
       "rubric": {
-        "kind": "frequency",
-        "component": "hyperactivity_impulsivity",
-        "score_from": "selected_option.score"
+        "kind": "symptom_count",
+        "domain": "hyperactivity_impulsivity",
+        "present_values": [
+          "often",
+          "very_often"
+        ],
+        "present_points": 1,
+        "other_points": 0
       }
     },
     {
       "id": "q19",
       "domain": "context",
       "facet": "childhood_history",
-      "statement": "Thinking back to before age 12, do you recall similar attention, restlessness, or impulsivity difficulties?",
+      "statement": "Before age 12, do you recall several similar difficulties with attention, activity level, or impulsive behavior?",
       "answer": {
         "type": "single_select",
         "required": true,
@@ -855,66 +992,74 @@
         ]
       },
       "rubric": {
-        "kind": "context",
-        "contributes_to_score": false
+        "kind": "context_check",
+        "criterion": "childhood_onset",
+        "reported_value": "yes",
+        "uncertain_value": "unsure"
       }
     },
     {
       "id": "q20",
       "domain": "context",
-      "facet": "functional_impact",
-      "statement": "During the past six months, where have these difficulties caused noticeable problems for you? Select all that apply.",
+      "facet": "clinical_context",
+      "statement": "For each statement, choose the answer that best fits your experience.",
       "answer": {
-        "type": "multi_select",
+        "type": "matrix_single_select",
         "required": true,
-        "min_selections": 1,
         "options": [
           {
-            "value": "home",
-            "label": "Home or daily responsibilities"
+            "value": "yes",
+            "label": "Yes"
           },
           {
-            "value": "work",
-            "label": "Work"
-          },
-          {
-            "value": "education",
-            "label": "School or study"
-          },
-          {
-            "value": "relationships",
-            "label": "Relationships or social life"
-          },
-          {
-            "value": "other",
-            "label": "Another area of life"
-          },
-          {
-            "value": "none",
-            "label": "No noticeable problems",
-            "exclusive": true
+            "value": "no",
+            "label": "No"
           },
           {
             "value": "unsure",
-            "label": "Not sure",
-            "exclusive": true
+            "label": "Not sure"
+          }
+        ],
+        "rows": [
+          {
+            "id": "duration",
+            "statement": "These difficulties have persisted for at least six months."
+          },
+          {
+            "id": "settings",
+            "statement": "Several difficulties occur in at least two settings, such as at home and at work or school."
+          },
+          {
+            "id": "impairment",
+            "statement": "These difficulties interfere with or reduce the quality of daily, work, school, or social functioning."
+          },
+          {
+            "id": "possible_other_explanations",
+            "statement": "Sleep problems, stress, anxiety, depression, substance use, or another condition may explain these difficulties better."
           }
         ]
       },
       "rubric": {
-        "kind": "impact",
-        "component": "impact",
-        "count_values": [
-          "home",
-          "work",
-          "education",
-          "relationships",
-          "other"
+        "kind": "context_checks",
+        "checks": [
+          {
+            "row_id": "duration",
+            "reported_value": "yes"
+          },
+          {
+            "row_id": "settings",
+            "reported_value": "yes"
+          },
+          {
+            "row_id": "impairment",
+            "reported_value": "yes"
+          },
+          {
+            "row_id": "possible_other_explanations",
+            "review_value": "yes"
+          }
         ],
-        "exclusive_values": [
-          "none",
-          "unsure"
-        ]
+        "uncertain_value": "unsure"
       }
     }
   ],
