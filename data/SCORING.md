@@ -1,47 +1,70 @@
-# ADHD symptom indication score
+# Combining the adult ADHD question responses
 
-[adhd-questions.json](./adhd-questions.json) contains the 20 questions, answer options, and machine-readable scoring rules. This page explains the same rules for implementers. The result is a **0–100 indication score**, not a percentage chance or a diagnosis. Higher scores mean more frequently reported symptoms and/or impact. The questions and weights are not clinically validated.
+[adhd-questions.json](./adhd-questions.json) is the machine-readable source for the questions and rules. This guide describes the same result calculation. It is a **criteria-informed self-report summary**, not a clinical diagnosis or a percentage chance.
 
-## Inputs
+## 1. Validate the answers
 
-- q01–q18: one answer per question. Use the selected option's `score`: Never = 0, Rarely = 1, Sometimes = 2, Often = 3, Very often = 4.
-- q19: one of Yes, No, or Not sure. Record this childhood-history answer alongside the score; it has **0% weight**.
-- q20: an array of unique selections. Count `home`, `work`, `education`, `relationships`, and `other` as impact areas. `none` and `unsure` must each be selected alone.
+Require one valid answer for each of q01–q19 and one valid answer for **each of the four rows** in q20: `duration`, `settings`, `impairment`, and `possible_other_explanations`. Do not calculate a result from missing or invalid responses; prompt for the missing answer. The questionnaire is intended for adults 18 or older.
 
-Reject missing, duplicate, incompatible, or unknown answers. Require all 20 answers. If q20 is `unsure`, show the two symptom component scores but mark the overall score **unavailable**; do not treat uncertainty as zero.
+## 2. Count reported symptoms
 
-## Calculation
+Each of the 18 symptom questions has **equal weight** within its domain:
 
-| Component | Questions | Normalized score (0–100) | Weight |
-| --- | --- | --- | ---: |
-| Inattention, `I` | q01–q09 | `100 × sum(option.score) / 36` | 40% |
-| Hyperactivity/impulsivity, `H` | q10–q18 | `100 × sum(option.score) / 36` | 40% |
-| Everyday impact, `C` | q20 | `100 × min(impact area count, 2) / 2` | 20% |
-| Childhood history | q19 | Shown separately; no points | 0% |
+| Answer to q01–q18 | Count for that item |
+| --- | ---: |
+| Never, Rarely, Sometimes | 0 |
+| Often, Very often | 1 |
 
-For impact, `none` gives `C = 0`; one area gives `C = 50`; two or more areas give `C = 100`. `other` counts as one area. This count reflects where a person reports problems; it does not independently establish that symptoms occur across settings.
+- **Inattention count:** add q01–q09; range 0–9.
+- **Hyperactivity/impulsivity count:** add q10–q18; range 0–9.
 
-```text
-score = 0.40 × I + 0.40 × H + 0.20 × C
-```
+The count threshold is **5 in either domain** for this adult-oriented summary. The mapping from `often` / `very_often` to a counted item is an operational rule for this questionnaire. It has not been validated as a substitute for a clinician's judgment that a symptom meets diagnostic criteria.
 
-Keep full precision through the calculation. Round only the final score to the nearest integer, with 0.5 rounded up. Display it as **"ADHD symptom indication score: N/100"**. Also display `I`, `H`, the selected q20 areas, and the q19 response. Do not display `N%` as a chance of having ADHD or assign diagnostic labels to score ranges.
+## 3. Describe the symptom pattern
 
-### Worked example
+Apply these conditions in order; exactly one pattern will match:
 
-Suppose q01–q09 sum to 18, q10–q18 sum to 9, q20 selects `home` and `work`, and q19 is `unsure`:
+| Code | Inattention count | Hyperactivity/impulsivity count |
+| --- | --- | --- |
+| `combined_pattern` | 5–9 | 5–9 |
+| `inattentive_pattern` | 5–9 | 0–4 |
+| `hyperactive_impulsive_pattern` | 0–4 | 5–9 |
+| `below_count_threshold` | 0–4 | 0–4 |
 
-```text
-I = 100 × 18 / 36 = 50
-H = 100 × 9 / 36 = 25
-C = 100 × min(2, 2) / 2 = 100
-score = 0.40 × 50 + 0.40 × 25 + 0.20 × 100 = 50/100
-```
+These are **reported symptom patterns**, not diagnostic presentations assigned by a clinician.
 
-The q19 response is displayed separately and does not change the 50/100 result.
+## 4. Combine the context answers
 
-## Interpretation
+The four contextual features are reported when all these values are `yes`:
 
-This score is a simple weighted summary of self-reported experiences, with equal weight for the two nine-question symptom groups and 20% for impact. The weights are design choices, not measured probabilities. A low score does not rule out ADHD; a high score does not establish it. If the person is concerned or their difficulties affect daily life, suggest discussing the answers with a healthcare professional, regardless of score. Clinical evaluation considers duration, childhood history, settings, impairment, and other possible causes.
+| Feature | Required answer |
+| --- | --- |
+| Several similar difficulties before age 12 | `q19 = yes` |
+| Difficulties for at least six months | `q20.duration = yes` |
+| Several difficulties in at least two settings | `q20.settings = yes` |
+| Noticeable interference with functioning | `q20.impairment = yes` |
 
-Sources: [CDC diagnostic criteria and evaluation](https://www.cdc.gov/adhd/hcp/clinical-care/index.html); [NIMH ADHD symptoms and diagnosis](https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know).
+Then assign exactly one `combination_code`:
+
+1. If the pattern is `below_count_threshold`, use `below_count_threshold`.
+2. Otherwise, if **all four** context answers above are `yes`, use `reported_pattern_with_context`.
+3. Otherwise, use `symptom_pattern_context_incomplete`.
+
+Always display the actual context answers, including `no` and `unsure`. Separately flag `q20.possible_other_explanations = yes` for clinical review. A `no` or `unsure` answer to that row cannot rule out another explanation. A missing context feature or a count below five should not be presented as proof that ADHD is absent.
+
+## 5. Display the result
+
+Show the two counts out of nine, the symptom pattern, all five context responses (q19 plus four q20 rows), and the combination code in plain language. For example, if q01–q09 contain six `often` / `very_often` answers and q10–q18 contain three, the pattern is `inattentive_pattern`. If q19 and the duration and impairment rows are `yes`, but the settings row is `unsure`, the combined result is `symptom_pattern_context_incomplete`.
+
+Use these descriptions:
+
+- `reported_pattern_with_context`: “Your answers report a symptom-count pattern and the main contextual features. A clinical assessment is needed to interpret them.”
+- `symptom_pattern_context_incomplete`: “Your answers report a symptom-count pattern, but some contextual features are uncertain or not reported.”
+- `below_count_threshold`: “Your reported symptom counts are below this questionnaire's adult threshold. This does not rule out ADHD or other concerns.”
+
+Do **not** turn counts into a weighted percentage, probability, or automated diagnosis. Clinicians also consider whether symptoms are developmentally inappropriate, corroborating history, severity, impairment, and other possible explanations. Self-report questions alone cannot establish these factors.
+
+## Sources
+
+- [CDC: DSM-5 criteria summary and clinical evaluation](https://www.cdc.gov/adhd/hcp/clinical-care/index.html)
+- [NIMH: ADHD symptoms and diagnosis](https://www.nimh.nih.gov/health/publications/attention-deficit-hyperactivity-disorder-what-you-need-to-know)
