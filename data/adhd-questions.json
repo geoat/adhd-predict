@@ -1,27 +1,78 @@
 {
-  "schema_version": "1.0.0",
-  "title": "ADHD symptom discussion questions",
+  "schema_version": "1.1.0",
+  "title": "ADHD symptom indication questions",
   "audience": "Adults answering for themselves",
   "language": "en",
-  "purpose": "Educational, unvalidated self-report prompts for discussing possible ADHD symptoms with a qualified healthcare professional. Not a diagnostic instrument.",
-  "instructions": "For questions 1–18, think about your typical experience during the past six months. Choose one answer per question. Question 20 allows multiple choices except its exclusive options.",
-  "limitations": "These original questions have not been clinically validated. A score or pattern cannot determine whether someone has ADHD. Diagnosis requires a professional assessment of duration, developmental appropriateness, childhood onset, symptoms across settings, impairment, and other possible causes.",
+  "purpose": "Collect self-reported symptoms and everyday impact for an ADHD indication score.",
+  "instructions": "For q01–q18, consider your typical experience over the past six months. Choose one answer for each question. q19 asks about childhood. For q20, select every area affected, or select No noticeable problems or Not sure alone.",
   "response_format": {
     "single_select": "Store one option value.",
-    "multi_select": "Store an array of option values; reject a selection that combines an exclusive option with any other option."
+    "multi_select": "Store an array of unique option values. An option marked exclusive must be selected alone."
   },
-  "result_guidance": {
-    "symptom_item_scores": "For q01–q18, store the selected score (0–4) and review flag. Scores only summarize reported frequency; do not convert them to a probability, diagnosis, or DSM symptom count.",
-    "domains": [
-      "inattention",
-      "hyperactivity_impulsivity"
-    ],
-    "context_items": [
-      "q19",
-      "q20"
-    ],
-    "display_message": "Your responses can help you describe your experiences to a healthcare professional. They do not diagnose or rule out ADHD. If these difficulties affect your life, consider seeking an assessment.",
-    "no_diagnostic_cutoff": true
+  "scoring": {
+    "name": "ADHD symptom indication score",
+    "unit": "points_out_of_100",
+    "weights": {
+      "inattention": 0.4,
+      "hyperactivity_impulsivity": 0.4,
+      "impact": 0.2
+    },
+    "components": {
+      "inattention": {
+        "question_ids": [
+          "q01",
+          "q02",
+          "q03",
+          "q04",
+          "q05",
+          "q06",
+          "q07",
+          "q08",
+          "q09"
+        ],
+        "raw_score": "sum(selected_option.score)",
+        "max_raw_score": 36,
+        "normalized_score": "100 * raw_score / 36"
+      },
+      "hyperactivity_impulsivity": {
+        "question_ids": [
+          "q10",
+          "q11",
+          "q12",
+          "q13",
+          "q14",
+          "q15",
+          "q16",
+          "q17",
+          "q18"
+        ],
+        "raw_score": "sum(selected_option.score)",
+        "max_raw_score": 36,
+        "normalized_score": "100 * raw_score / 36"
+      },
+      "impact": {
+        "question_id": "q20",
+        "count_values": [
+          "home",
+          "work",
+          "education",
+          "relationships",
+          "other"
+        ],
+        "count_cap": 2,
+        "normalized_score": "100 * min(count_selected_impact_values, 2) / 2",
+        "none_score": 0,
+        "unsure_score": null
+      }
+    },
+    "context_only": {
+      "question_id": "q19",
+      "contributes_to_score": false
+    },
+    "formula": "0.40 * inattention + 0.40 * hyperactivity_impulsivity + 0.20 * impact",
+    "rounding": "Round only the final score to the nearest integer (0.5 rounds up).",
+    "completeness": "Require valid answers to all 20 questions. If q20 is unsure, the overall score is unavailable; show the inattention and hyperactivity_impulsivity component scores.",
+    "interpretation": "Higher scores mean more frequently reported symptoms and/or impact. This is an unvalidated indication score, not a percentage chance or diagnosis."
   },
   "questions": [
     {
@@ -62,12 +113,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -108,12 +155,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -154,12 +197,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -200,12 +239,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -246,12 +281,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -292,12 +323,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -338,12 +365,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -384,12 +407,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -430,12 +449,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "inattention",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -476,12 +491,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -522,12 +533,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -568,12 +575,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -614,12 +617,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -660,12 +659,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -706,12 +701,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -752,12 +743,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -798,12 +785,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -844,12 +827,8 @@
       },
       "rubric": {
         "kind": "frequency",
-        "score_from": "selected_option.score",
-        "review_flag_values": [
-          "often",
-          "very_often"
-        ],
-        "meaning": "Higher scores indicate more frequently reported difficulty for this item; this is not a diagnostic symptom count."
+        "component": "hyperactivity_impulsivity",
+        "score_from": "selected_option.score"
       }
     },
     {
@@ -876,12 +855,8 @@
         ]
       },
       "rubric": {
-        "kind": "history",
-        "interpretation_by_value": {
-          "yes": "Childhood difficulties reported; discuss examples with a clinician.",
-          "no": "Childhood difficulties not recalled; this alone cannot rule ADHD in or out.",
-          "unsure": "Childhood history uncertain; a clinician may seek other sources of history."
-        }
+        "kind": "context",
+        "contributes_to_score": false
       }
     },
     {
@@ -927,8 +902,9 @@
         ]
       },
       "rubric": {
-        "kind": "impact_settings",
-        "impact_values": [
+        "kind": "impact",
+        "component": "impact",
+        "count_values": [
           "home",
           "work",
           "education",
@@ -938,8 +914,7 @@
         "exclusive_values": [
           "none",
           "unsure"
-        ],
-        "interpretation": "Record the selected areas and count distinct areas for discussion. Two selected areas suggest impact across more than one setting, but do not establish that symptoms occur in multiple settings or meet diagnostic criteria."
+        ]
       }
     }
   ],
