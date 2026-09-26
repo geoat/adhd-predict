@@ -19,7 +19,7 @@ Success means the same validated answers produce the same result across local an
 | 4. Submission and results | Add thin form-bound Server Action with authoritative parsing and use-case call; use React action state for loading, retries, validation errors and result DTO. Render both counts, pattern, all context responses, other-explanations review note, limits and next steps. | Incomplete/invalid values cannot produce a result; result language matches reviewed copy; live Cloudflare preview actually invokes the Worker action. | 2–3 days |
 | 5. Hardening and release | Automate lint, typecheck, unit/component and end-to-end journey checks; run accessibility and mobile checks, preview smoke, performance and privacy review. Correct failures. Promote through existing branch process; verify production and rollback instructions. | All release gates pass; version/commit and known-good rollback are recorded; product and clinical reviewers sign off. | 2–4 days |
 
-Estimated engineering effort: about 12–19 working days, excluding waiting for external review and any Cloudflare account fixes. Split work into small PRs aligned with phases; phase 0 and domain contracts precede the UI/result integration. Phases 2 and part of 3 may overlap after contracts stabilize.
+Estimated engineering effort: about 11–18 working days, excluding waiting for external review. Split work into small PRs aligned with phases; phase 0 and domain contracts precede the UI/result integration. Phases 2 and part of 3 may overlap after contracts stabilize.
 
 ## Proposed PR sequence
 
@@ -56,9 +56,9 @@ Add a `typecheck` script and test tooling in the implementation PR. Verify React
 
 | Risk or open decision | Owner / action before dependent phase |
 | --- | --- |
-| Repository describes Cloudflare settings but live account state may differ | Engineer verifies dashboard, route, preview, secrets and branch mapping in phase 0. Do not change production settings based only on docs. |
+| Working deployment must remain stable | Engineer records current dashboard, route, preview and branch mapping in phase 0; avoid changing deployment configuration without a specific need. |
 | Clinical interpretation may be overclaimed | Product and qualified clinical reviewer approve copy and any rule change; preserve count/context separation and the existing no-diagnosis guidance. |
-| Question-bank version changes during an in-progress draft | Engineer pins payload/draft to `schema_version`; reject or explicitly migrate stale drafts, with clear restart messaging. |
+| Question-bank version changes while a page is open | Engineer pins the submitted payload to `schema_version`; reject stale pages with clear reload messaging. |
 | User loses progress on refresh | Explain this on entry and near the Clear control. Keep in-memory values on back navigation and recoverable action errors; persistence is out of scope. |
 | Vinext beta and framework compatibility | Engineer builds with locked dependencies and runs a real Worker preview before relying on Server Actions; isolate action and keep a rollback commit. |
 | Traffic or latency beyond Worker limits | Engineer measures bundle, latency and limits in preview/production. Add controls or storage only against observed requirements. |
