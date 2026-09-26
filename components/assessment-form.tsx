@@ -2,7 +2,6 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { submitAssessment, type AssessmentActionState } from "@/app/actions";
-import type { AssessmentQuestion } from "@/lib/assessment/types";
 
 type QuestionView = {
   id: string;
