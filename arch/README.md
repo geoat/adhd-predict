@@ -8,7 +8,7 @@ This directory is the implementation guide for the adult self-report questionnai
 - The home page is still the starter page. There is no questionnaire UI, scoring implementation, persistence, test suite or application API yet.
 - `data/adhd-questions.json` is a versioned 20-question adult bank; `lib/schemas/adhd-questions.ts` validates its structure and `lib/server/adhd-questions.ts` parses it once on the server.
 - [The scoring guide](../data/SCORING.md) defines the current counts, context checks and restrained result language. Treat it and the JSON rubric as the product's current contract; resolve discrepancies before implementing scoring.
-- `develop` has Vinext, the Cloudflare Vite plugin, Wrangler configuration and build/preview scripts. The README and preview guide describe `main` as production and non-production branches as previews. These are repository settings and instructions, not verification of the live Cloudflare dashboard.
+- `develop` has Vinext, the Cloudflare Vite plugin, Wrangler configuration and build/preview scripts. The README and preview guide describe `main` as production and non-production branches as previews. The owner confirms the existing deployment is working; implementation should preserve it and record the effective settings when release work starts.
 
 ## Document ownership
 
