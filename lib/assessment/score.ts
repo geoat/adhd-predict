@@ -1,4 +1,4 @@
-import type { AssessmentAnswers, AssessmentResult, ContextResponse } from "@/lib/assessment/types";
+import type { AssessmentAnswers, AssessmentResult } from "@/lib/assessment/types";
 
 const symptomIds = {
   inattention: Array.from({ length: 9 }, (_, index) => `q${String(index + 1).padStart(2, "0")}`),
@@ -61,6 +61,3 @@ export function scoreAssessment(answers: AssessmentAnswers): AssessmentResult {
   };
 }
 
-export function contextLabel(value: ContextResponse) {
-  return value === "yes" ? "Yes" : value === "no" ? "No" : "Unsure";
-}
